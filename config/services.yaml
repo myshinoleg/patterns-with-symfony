@@ -20,5 +20,11 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    App\Patterns\Behavioral\Observer\Consumers\Sum:
+        arguments:
+            - '@App\Patterns\Behavioral\Observer\Notifier'
 
+    App\Patterns\Behavioral\Observer\Consumers\Multiplication:
+        arguments:
+            - '@App\Patterns\Behavioral\Observer\Notifier'
 

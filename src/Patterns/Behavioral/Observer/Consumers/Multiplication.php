@@ -13,13 +13,13 @@ class Multiplication implements \SplObserver
 
     public function update(SplSubject $subject)
     {
-        $result = 0;
+        $result = 1;
 
         foreach ($subject->getArguments() as $argument)
         {
-            $result*=$argument;
+            $result *= $argument;
         }
 
-        echo $result;
+        echo ' Multiplication = ' . $result;
     }
 }

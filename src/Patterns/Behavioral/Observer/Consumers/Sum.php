@@ -20,6 +20,6 @@ class Sum implements \SplObserver
             $sum+=$argument;
         }
 
-        echo $sum;
+        echo ' Sum = ' . $sum;
     }
 }
