@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Form\AbstractFactoryType;
 use App\Form\BuilderType;
 use App\Form\FactoryMethodType;
 use App\Form\ObserverType;
@@ -16,7 +15,6 @@ use App\Patterns\Behavioral\Observer\Notifier;
 use App\Patterns\Behavioral\Strategy\TradeFactory;
 use App\Patterns\Creational\AbstractFactory\PlatformFactory;
 use App\Patterns\Creational\Builder\BuilderFactory;
-use App\Patterns\Creational\Builder\IBuilder;
 use App\Patterns\Creational\FactoryMethod\IPlatform;
 use App\Patterns\Creational\FactoryMethod\PlatformAdapter\FabrAdapter;
 use App\Patterns\Creational\FactoryMethod\PlatformAdapter\NepAdapter;
