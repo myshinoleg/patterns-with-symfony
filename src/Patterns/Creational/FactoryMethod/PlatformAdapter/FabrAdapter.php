@@ -10,6 +10,8 @@ class FabrAdapter implements IPlatform
 {
     private static $instance = null;
 
+    private function __construct() {}
+
     public static function getInstance(): IPlatform
     {
         if (!self::$instance)

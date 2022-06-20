@@ -8,6 +8,8 @@ class FabrSearch implements ISearch
 {
     private static $instance;
 
+    private function __construct() {}
+
     public static function getInstance(): ISearch
     {
         if (!self::$instance)

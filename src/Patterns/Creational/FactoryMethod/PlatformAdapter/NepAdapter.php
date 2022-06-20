@@ -10,6 +10,8 @@ class NepAdapter implements IPlatform
 {
     private static $instance;
 
+    private function __construct() {}
+
     public static function getInstance(): IPlatform
     {
         if (!self::$instance)
