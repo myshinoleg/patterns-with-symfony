@@ -7,11 +7,11 @@ use App\Patterns\Creational\Builder\FormBuilders\NepBuilder;
 
 class BuilderFactory
 {
-	public static function getBuilder($tradeType): string
+	public static function getBuilder($tradeType):IBuilder
 	{
 		return match ($tradeType) {
-			'nep' => NepBuilder::class,
-			'fabr' => FabrBuilder::class
+			'nep' => new NepBuilder(),
+			'fabr' => new FabrBuilder()
 		};
 	}
 }

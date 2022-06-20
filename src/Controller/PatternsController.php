@@ -88,8 +88,6 @@ class PatternsController extends AbstractController
         $form = $this->createForm(FactoryMethodType::class, $searches);
         $form->handleRequest($request);
 
-        //todo::����� �� ����������� ���������
-
         return $this->render('patterns/patternForm.html.twig', ['form' => $form->createView()]);
     }
 
@@ -133,15 +131,36 @@ class PatternsController extends AbstractController
 		if ($form->isSubmitted())
 		{
 			$formData = $form->getData();
-			$builderClass = BuilderFactory::getBuilder($formData['tradeType']);
-
-			/** @var IBuilder $builder */
-			$builder = new $builderClass();
+			$builder = BuilderFactory::getBuilder($formData['tradeType']);
 			$builder->createHeader('Welcome!')
 				->createBody('WAAA')
 				->createBottom('phone');
 
 			return $this->render('patterns/builder.html.twig', ['content' => $builder->getContent()]);
+		}
+
+		return $this->render('patterns/patternForm.html.twig', ['form' => $form->createView()]);
+	}
+
+	#[Route('patternAbstractFactory', name: 'patternAbstractFactory')]
+	public function patternAbstractFactory(Request $request): Response
+	{
+		$form = $this->createForm(BuilderType::class);
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted())
+		{
+			$formData = $form->getData();
+			$factory = new PlatformFactory();
+			$platform = $factory->factory($formData['tradeType']);
+
+			$platform->getTitle();
+			$platform->getLink();
+
+			return $this->render(
+				'patterns/abstractFactory.html.twig',
+				['title' => $platform->getTitle(), 'link' => $platform->getLink()]
+			);
 		}
 
 		return $this->render('patterns/patternForm.html.twig', ['form' => $form->createView()]);
