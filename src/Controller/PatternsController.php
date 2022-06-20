@@ -2,10 +2,21 @@
 
 namespace App\Controller;
 
+use App\Form\AbstractFactoryType;
+use App\Form\BuilderType;
 use App\Form\FactoryMethodType;
 use App\Form\ObserverType;
 use App\Form\PatternsType;
+use App\Form\PatternIteratorType;
+use App\Patterns\Behavioral\Iterator\Collection;
+use App\Patterns\Behavioral\Iterator\Item;
+use App\Patterns\Behavioral\Observer\Consumers\Multiplication;
+use App\Patterns\Behavioral\Observer\Consumers\Sum;
+use App\Patterns\Behavioral\Observer\Notifier;
 use App\Patterns\Behavioral\Strategy\TradeFactory;
+use App\Patterns\Creational\AbstractFactory\PlatformFactory;
+use App\Patterns\Creational\Builder\BuilderFactory;
+use App\Patterns\Creational\Builder\IBuilder;
 use App\Patterns\Creational\FactoryMethod\IPlatform;
 use App\Patterns\Creational\FactoryMethod\PlatformAdapter\FabrAdapter;
 use App\Patterns\Creational\FactoryMethod\PlatformAdapter\NepAdapter;
@@ -46,14 +57,19 @@ class PatternsController extends AbstractController
 	}
 
     #[Route('patternObserver', name: 'patternObserver')]
-    public function patternObserver(Request $request): Response
+    public function patternObserver(Request $request, Multiplication $multiplication, Sum $sum): Response
     {
         $form = $this->createForm(ObserverType::class);
         $form->handleRequest($request);
 
+        $notifier = new Notifier();
+        $notifier->attach($sum);
+        $notifier->attach($multiplication);
+
         if ($form->isSubmitted())
         {
-            // todo
+            $formData = $form->getData();
+            $notifier->calculate($formData['var1'], $formData['var2']);
         }
 
         return $this->render('patterns/observer.html.twig', ['form' => $form->createView()]);
@@ -72,8 +88,62 @@ class PatternsController extends AbstractController
         $form = $this->createForm(FactoryMethodType::class, $searches);
         $form->handleRequest($request);
 
-        //todo::поиск по заполненной платформе
+        //todo::пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
         return $this->render('patterns/patternForm.html.twig', ['form' => $form->createView()]);
     }
+
+	#[Route('patternIterator', name: 'patternIterator')]
+	public function patternIterator(Request $request): Response
+	{
+		$form = $this->createForm(PatternIteratorType::class);
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted())
+		{
+			$collection = new Collection();
+			$formData = $form->getData();
+
+			if ($formData['countElements'] && $formData['countElements'] > 0)
+			{
+				for ($i = 0; $i < $formData['countElements']; $i++)
+				{
+					$element = new Item($i);
+					$collection->addItem($element);
+				}
+
+				$text = '';
+				foreach ($collection as $item)
+				{
+					$text .= $item->print();
+				}
+				echo ($text);die;
+			}
+		}
+
+		return $this->render('patterns/patternForm.html.twig', ['form' => $form->createView()]);
+	}
+
+	#[Route('patternBuilder', name: 'patternBuilder')]
+	public function patternBuilder(Request $request): Response
+	{
+		$form = $this->createForm(BuilderType::class);
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted())
+		{
+			$formData = $form->getData();
+			$builderClass = BuilderFactory::getBuilder($formData['tradeType']);
+
+			/** @var IBuilder $builder */
+			$builder = new $builderClass();
+			$builder->createHeader('Welcome!')
+				->createBody('WAAA')
+				->createBottom('phone');
+
+			return $this->render('patterns/builder.html.twig', ['content' => $builder->getContent()]);
+		}
+
+		return $this->render('patterns/patternForm.html.twig', ['form' => $form->createView()]);
+	}
 }
