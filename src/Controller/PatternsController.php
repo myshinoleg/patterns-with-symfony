@@ -23,6 +23,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Patterns Controller
+ */
 class PatternsController extends AbstractController
 {
 	#[Route('patterns', name: 'patterns')]
@@ -162,5 +165,18 @@ class PatternsController extends AbstractController
 		}
 
 		return $this->render('patterns/patternForm.html.twig', ['form' => $form->createView()]);
+	}
+
+	#[Route('reflection', name: 'reflection')]
+	public function reflection(Request $request): Response
+	{
+		$reflection = new \ReflectionClass($this);
+		echo "phpDoc: \n";
+		dump($reflection->getDocComment());
+
+		echo 'methods: \n';
+		dump($reflection->getMethods());
+
+		return $this->render('patterns/index.html.twig');
 	}
 }
